@@ -11,3 +11,5 @@ class Shelter(db.Model):
     city = db.Column(db.String(50), nullable = False)
     phone = db.Column(db.String(20), nullable = False, unique = True)
     email = db.Column(db.String(50), nullable = False, unique = True)
+
+    pets = db.relationship("Pet", back_populates = "shelter")
