@@ -18,5 +18,5 @@ class Pet(db.Model):
 # Set a one to many relationship between shelter and pets
     shelter = db.relationship("Shelter", back_populates="pets")
 
-# Set a many to many relationship using Adoption_Requests table
+# Set a many to many relationship between pets and users using Adoption_Requests table
     adoption_requests = db.relationship("AdoptionRequest", back_populates = "pet")
