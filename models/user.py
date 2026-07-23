@@ -11,3 +11,6 @@ class User(db.Model):
     role = db.Column(db.String(30), nullable = False, default = "adopter")
     password = db.Column(db.String(100), nullable = False)
     created_at = db.Column(db.DateTime)
+
+# Set a many to many relationship using Adoption_Requests table
+    adoption_requests = db.Relationship("AdoptionRequest", back_populates = "user")
