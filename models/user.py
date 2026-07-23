@@ -1,5 +1,6 @@
 # user.py file
 from app import db
+from models.favourite import favourites
 
 # Create User class
 class User(db.Model):
@@ -12,5 +13,7 @@ class User(db.Model):
     password = db.Column(db.String(100), nullable = False)
     created_at = db.Column(db.DateTime)
 
-# Set a many to many relationship between pets and users using Adoption_Requests table
-    adoption_requests = db.Relationship("AdoptionRequest", back_populates = "user")
+ # One user can create many adoption requests
+    adoption_requests = db.relationship("AdoptionRequest", back_populates = "user")
+
+    favourite_pets = db.relationship("Pet", secondary = favourites, back_populates = "favourited_by")

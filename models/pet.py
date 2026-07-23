@@ -1,5 +1,6 @@
 # pet.py
 from app import db
+from models.favourite import favourites
 
 # Creation of a pet class
 class Pet(db.Model):
@@ -15,8 +16,11 @@ class Pet(db.Model):
     shelter_id = db.Column(db.Integer, db.ForeignKey("shelters.id"), nullable = False)
     breed = db.Column(db.String(50), nullable=False)
 
-# Set a one to many relationship between shelter and pets
+# One shelter has many pets
     shelter = db.relationship("Shelter", back_populates="pets")
 
-# Set a many to many relationship between pets and users using Adoption_Requests table
+# one pet can have many adoption requests
     adoption_requests = db.relationship("AdoptionRequest", back_populates = "pet")
+
+# A many to many relationship with users through favourites table
+    favourited_by = db.relationship("User", secondary = favourites, back_populates = "favourite_pets")
