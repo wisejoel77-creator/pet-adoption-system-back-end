@@ -12,6 +12,7 @@ class AdoptionRequest(db.Model):
     request_date = db.Column(db.DateTime, nullable = False)
     notes = db.Column(db.Text, nullable = True)
 
-# Set a many to many relationship between pets and users using Adoption_Requests table
+# Link users and pets through an adoption request object
+
     user = db.relationship("User", back_populates = "adoption_requests")
     pet = db.relationship("Pet", back_populates = "adoption_requests")

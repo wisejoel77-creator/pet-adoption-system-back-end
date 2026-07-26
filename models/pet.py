@@ -1,6 +1,6 @@
 # pet.py
 from app import db
-from models.favourite import favourites
+from models import favourites
 
 # Creation of a pet class
 class Pet(db.Model):

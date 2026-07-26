@@ -1,6 +1,7 @@
 # user.py file
 from app import db
-from models.favourite import favourites
+from models import favourites
+from datetime import datetime
 
 # Create User class
 class User(db.Model):
@@ -10,8 +11,8 @@ class User(db.Model):
     username = db.Column(db.String(50), nullable = False, unique = True)
     email = db.Column(db.String(80), nullable = False, unique = True)
     role = db.Column(db.String(30), nullable = False, default = "adopter")
-    password = db.Column(db.String(100), nullable = False)
-    created_at = db.Column(db.DateTime)
+    password_hash = db.Column(db.String(100), nullable = False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
  # One user can create many adoption requests
     adoption_requests = db.relationship("AdoptionRequest", back_populates = "user")
