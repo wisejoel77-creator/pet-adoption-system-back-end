@@ -31,3 +31,19 @@ def create_adoption_request():
         "message": " A new adoption request has been submitted",
         "request_id": new_request.id
     },201
+
+@adoptionRequests.route("/my-adoption-requests", methods=["GET"])
+@jwt_required()
+def get_adoption_requests():
+    current_user_id = get_jwt_identity()
+
+    requests = AdoptionRequest.query.filter_by(user_id=current_user_id).all()
+    return[{
+        "id": adoption_request.id,
+        "pet_id": adoption_request.pet_id,
+        "status": adoption_request.status,
+        "notes": adoption_request.notes,
+        "request_date": adoption_request.request_date
+    } 
+    for adoption_request in requests
+    ]
