@@ -2,6 +2,8 @@ from flask import request, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.adoption_request import AdoptionRequest
 from extensions import db
+from flask_jwt_extended import get_jwt
+
 
 adoptionRequests = Blueprint("adoptionRequests",__name__ )
 
@@ -47,3 +49,31 @@ def get_adoption_requests():
     } 
     for adoption_request in requests
     ]
+
+# Route to accept or decline an adoption request
+@adoptionRequests.route("/adoption-request/<int:request_id>", methods=["PATCH"])
+@jwt_required()
+def review_adoption_request(request_id):
+    current_user_id = get_jwt_identity()
+    claims = get_jwt()
+
+    if claims["role"] != "admin":
+        return {"error": "Admins only"}, 403
+    adoption_request = AdoptionRequest.query.get(request_id)
+
+    if adoption_request is None:
+        return {"error": "Request not found"}, 404
+    
+    data = request.get_json()
+    status = data.get("status")
+
+    if status not in ["Approved", "Rejected"]:
+        return { "error": "Status must be Approved or Rejected" }, 400
+
+    adoption_request.status = status
+    db.session.commit()
+    return {
+    "message": "Adoption request updated successfully",
+    "status": adoption_request.status
+}
+
