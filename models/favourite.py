@@ -1,5 +1,5 @@
 # favourite.py file
-from app import db
+from extensions import db
 
 # An association table to link pets and users that have favourited them
 favourites = db.Table("favourites",

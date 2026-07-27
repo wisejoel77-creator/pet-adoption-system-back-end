@@ -1,5 +1,5 @@
 # pet.py
-from app import db
+from extensions import db
 from .favourite import favourites
 
 # Creation of a pet class

@@ -1,5 +1,5 @@
 # Shelter.py
-from app import db
+from extensions import db
 
 # Define a shelter class
 class Shelter(db.Model):

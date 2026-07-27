@@ -1,5 +1,5 @@
 # user.py file
-from app import db
+from extensions import db
 from .favourite import favourites
 from datetime import datetime
 

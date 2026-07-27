@@ -1,22 +1,18 @@
 # imports
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-from flask_bcrypt import Bcrypt
 from config import Config
+from extensions import db, migrate, jwt, bcrypt
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-
 # Initialize extensions
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-jwt = JWTManager(app)
+db.init_app(app)
+migrate.init_app(app, db)
+jwt.init_app(app)
+bcrypt.init_app(app)
 CORS(app)
-bcrypt = Bcrypt(app)
 
 # Import models so Flask-Migrate can detect them
 import models
