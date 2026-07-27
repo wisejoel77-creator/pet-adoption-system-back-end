@@ -57,7 +57,7 @@ def login():
 
 # Generate a token using the create_access_token function imported from flask
    token = create_access_token(
-      identity=login_user.id,
+      identity=str(login_user.id),
       additional_claims={"role": login_user.role})
 
 # return the access token back to the front end
@@ -65,6 +65,7 @@ def login():
     "access_token": token
 }
 
+# route to verify a user's identity
 @auth.route("/profile", methods=["GET"])
 @jwt_required()
 def profile():

@@ -4,6 +4,7 @@ from flask_cors import CORS
 from config import Config
 from extensions import db, migrate, jwt, bcrypt
 from routes.auth import auth
+from routes.requests import adoptionRequests
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -15,6 +16,7 @@ jwt.init_app(app)
 bcrypt.init_app(app)
 CORS(app)
 app.register_blueprint(auth, url_prefix = "/auth")
+app.register_blueprint(adoptionRequests)
 
 # Import models so Flask-Migrate can detect them
 import models
