@@ -1,6 +1,6 @@
 # user.py file
 from app import db
-from models import favourites
+from .favourite import favourites
 from datetime import datetime
 
 # Create User class

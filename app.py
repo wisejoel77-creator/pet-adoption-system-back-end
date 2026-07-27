@@ -18,6 +18,9 @@ jwt = JWTManager(app)
 CORS(app)
 bcrypt = Bcrypt(app)
 
+# Import models so Flask-Migrate can detect them
+import models
+
 # Set up '/' route
 @app.route("/")
 def home():
