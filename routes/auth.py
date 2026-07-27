@@ -2,7 +2,7 @@
 from flask import Blueprint, request 
 from models.user import User
 from extensions import bcrypt, db
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 auth = Blueprint ("auth", __name__)
 
 #register route
@@ -53,7 +53,7 @@ def login():
    if login_user is None:
       return("User login was not successful")
    if not bcrypt.check_password_hash(login_user.password_hash, password):
-    return("Wrong password. Please try again")
+    return("Wrong password. Please try again"), 401
 
 # Generate a token using the create_access_token function imported from flask
    token = create_access_token(
@@ -64,4 +64,14 @@ def login():
    return {
     "access_token": token
 }
+
+@auth.route("/profile", methods=["GET"])
+@jwt_required()
+def profile():
+    current_user_id = get_jwt_identity()
+    return {
+        "user_id": current_user_id,
+        "message": "You are authenticated"
+    }
+
 
