@@ -24,6 +24,5 @@ import models
 def home():
     return {"message": "Pawfound API running"}
 
-
 if __name__ == "__main__":
     app.run(debug=True)
