@@ -77,4 +77,77 @@ def view_one_shelter(id):
         "phone": one_shelter.phone, "email": one_shelter.email
     },200
 
+# Route to update a shelter's details
+@shelter.route("/shelter/<int:id>", methods=["PATCH"])
+@jwt_required()
+def update_shelter(id):
+
+    access_right = get_jwt()
+    role = access_right["role"]
+
+    if role != "admin":
+        return {"Error":"You do not have admin rights" },403
+
+    shelter_to_update = Shelter.query.filter_by(id=id).first()
+    if shelter_to_update is None:
+        return { "Error":"Shelter not found"},404
+    data = request.get_json()
+
+# validations to ensure an admin can edit a particular field as well as checking whether the given field has a value
+    if "name" in data:
+        if data["name"].strip() == "":
+            return {"Error": "Shelter name cannot be empty"}, 400
+        shelter_to_update.name = data["name"]
+    if "address" in data:
+        if data["address"].strip() == "":
+            return {"Error": "Shelter address cannot be empty"}, 400
+        shelter_to_update.address = data["address"]
+    if "city" in data:
+        if data["city"].strip() == "":
+            return {"Error": "Shelter city cannot be empty"}, 400
+        shelter_to_update.city = data["city"]
+    if "phone" in data:
+        if data["phone"].strip() == "":
+            return {"Error": "Shelter phone number cannot be empty"}, 400
+        shelter_to_update.phone = data["phone"]
+    if "email" in data:
+        if data["email"].strip() == "":
+            return {"Error": "Shelter email cannot be empty"}, 400
+        existing_email = Shelter.query.filter_by(email=data["email"]).first()
+        
+    # shelter keeps existing email
+    if existing_email and existing_email.id != shelter_to_update.id:
+        return {"Error": "Another shelter already uses this email."}, 400
+    shelter_to_update.email = data["email"]
+
+    db.session.commit()
+    return {
+        "message":"Shelter updated successfully",
+        "shelter_id": shelter_to_update.id,
+        "name": shelter_to_update.name
+    },200
+
+@shelter.route("/shelter/<int:id>", methods=["DELETE"])
+@jwt_required()
+def delete_shelter(id):
+
+    access_right = get_jwt()
+    role = access_right["role"]
+
+    if role != "admin":
+        return {"Error":"You do not have admin rights"},403
+
+    shelter_to_delete = Shelter.query.filter_by(id=id).first()
+    if shelter_to_delete is None:
+        return {"Error":"Shelter not found"},404
+
+    if shelter_to_delete.pets:
+        return {"Error":"Cannot delete shelter because it has pets assigned"},400
+
+    db.session.delete(shelter_to_delete)
+    db.session.commit()
+
+    return {
+        "message":"Shelter deleted successfully"
+    },200
     
