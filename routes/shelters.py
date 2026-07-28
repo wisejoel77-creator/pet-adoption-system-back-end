@@ -54,4 +54,14 @@ def add_shelter():
     return { "message": "A new shelter has been created successfully",
     "shelter_id": new_shelter.id,
     "name": new_shelter.name }, 201
+
+# A route to view all existing shelters
+@shelter.route("/view-all-shelters", methods=["GET"])
+def view_all_shelters():
+    all_shelters = Shelter.query.all()
+    return[{ "id": shelter.id, "name": shelter.name,
+        "email": shelter.email, "phone": shelter.phone,
+        "city": shelter.city, "address": shelter.address
+    }for shelter in all_shelters
+    ], 200
     
