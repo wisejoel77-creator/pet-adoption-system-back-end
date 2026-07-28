@@ -7,6 +7,7 @@ from routes.auth import auth
 from routes.requests import adoptionRequests
 from routes.pets import pet
 from routes.shelters import shelter
+from routes.favorites import favourites
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -21,6 +22,7 @@ app.register_blueprint(auth, url_prefix = "/auth")
 app.register_blueprint(adoptionRequests)
 app.register_blueprint(pet)
 app.register_blueprint(shelter)
+app.register_blueprint(favourites)
 
 # Import models so Flask-Migrate can detect them
 import models

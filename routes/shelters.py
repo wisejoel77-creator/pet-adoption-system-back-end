@@ -24,15 +24,15 @@ def add_shelter():
 
     # validations to ensure none of the above fields are empty
     if name is None or name.strip() == "":
-        return{"Error": "Name of a shelter must be provided. Please fill out this field"}
+        return{"Error": "Name of a shelter must be provided. Please fill out this field"}, 400
     if email is None or email.strip() == "":
-        return{"Error": "The shelter's email must be provided. Please fill out this field"}
+        return{"Error": "The shelter's email must be provided. Please fill out this field"}, 400
     if address is None or address.strip() == "":
-        return{"Error": "The shelter's address must be provided. Please fill out this field"}
+        return{"Error": "The shelter's address must be provided. Please fill out this field"}, 400
     if city is None or city.strip() == "":
-        return{"Error": "The city that the shelter is located must be provided. Please fill out this field"}
+        return{"Error": "The city that the shelter is located must be provided. Please fill out this field"}, 400
     if phone is None or phone.strip() == "":
-        return{"Error": "The shelter's phone number must be provided. Please fill out this field"}
+        return{"Error": "The shelter's phone number must be provided. Please fill out this field"}, 400
 
 # validation to check whether the shelter email and phone number already exists
     existing_email = Shelter.query.filter_by(email=email).first()
@@ -113,12 +113,12 @@ def update_shelter(id):
     if "email" in data:
         if data["email"].strip() == "":
             return {"Error": "Shelter email cannot be empty"}, 400
+
         existing_email = Shelter.query.filter_by(email=data["email"]).first()
-        
-    # shelter keeps existing email
-    if existing_email and existing_email.id != shelter_to_update.id:
-        return {"Error": "Another shelter already uses this email."}, 400
-    shelter_to_update.email = data["email"]
+        if (existing_email and existing_email.id != shelter_to_update.id):
+           return {"Error": "Another shelter already uses this email." }, 400
+
+        shelter_to_update.email = data["email"]
 
     db.session.commit()
     return {
@@ -147,7 +147,5 @@ def delete_shelter(id):
     db.session.delete(shelter_to_delete)
     db.session.commit()
 
-    return {
-        "message":"Shelter deleted successfully"
-    },200
+    return {"message":"Shelter deleted successfully"},200
     

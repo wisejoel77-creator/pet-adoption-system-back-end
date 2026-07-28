@@ -11,7 +11,7 @@ class Pet(db.Model):
     species = db.Column(db.String(50), nullable = False)
     age = db.Column(db.Integer, nullable = False)
     gender = db.Column(db.String(50), nullable = False)
-    status = db.Column(db.String(50), nullable = False, default = "Available")
+    status = db.Column(db.String(50), nullable = False, default = "available")
     image_url = db.Column(db.String(300), nullable = False)
     shelter_id = db.Column(db.Integer, db.ForeignKey("shelters.id"), nullable = False)
     breed = db.Column(db.String(50), nullable=False)

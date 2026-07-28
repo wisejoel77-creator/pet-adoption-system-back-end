@@ -12,21 +12,25 @@ def register():
 
     username = data.get("username")
     email = data.get("email")
-    role = data.get("role")
+    role = data.get("role", "adopter")
     password = data.get("password")
 
 # Validations to ensure that email, username and password fields are not empty
     if username is None or username.strip() == "":
-        return ("username must be filled in")
-    if email is None or ("@") not in email:
-     return("Invalid email format. Please put in the correct email")
+        return {"Error": "username must be filled in"}, 400
+    if email is None or ("@") not in email or "." not in email:
+     return{"Error" : "Invalid email format. Please put in the correct email"}, 400
     if password is None or password.strip() == "":
-       return("Password field must not be empty")
+       return{"Error": "Password field must not be empty"}, 400
 
 # Validation to check whether the registered email already exists
     existing_user = User.query.filter_by(email=email).first()
     if existing_user is not None:
-        return ("Error: A user with this email already exists. Use a different email"), 409
+        return {"Error": "A user with this email already exists. Use a different email"}, 409
+
+    existing_username = User.query.filter_by(username=username).first()
+    if existing_username:
+        return {"Error": "Username already exists"}, 409
 
     hashed_password = bcrypt.generate_password_hash(password)
     password_hash = hashed_password.decode("utf-8")
@@ -38,7 +42,7 @@ def register():
     return{
        "message": "User created successfully",
        "user_name": username
-    }
+    }, 201
 
 #login route
 @auth.route("/login", methods=["POST"])
@@ -51,9 +55,9 @@ def login():
    login_user = User.query.filter_by(email=email).first()
 
    if login_user is None:
-      return("User login was not successful")
+      return{"Error": "User login was not successful"}, 401
    if not bcrypt.check_password_hash(login_user.password_hash, password):
-    return("Wrong password. Please try again"), 401
+    return{"Error": "Wrong password. Please try again"}, 401
 
 # Generate a token using the create_access_token function imported from flask
    token = create_access_token(
@@ -61,18 +65,22 @@ def login():
       additional_claims={"role": login_user.role})
 
 # return the access token back to the front end
-   return {
-    "access_token": token
-}
+   return {"access_token": token}
 
 # route to verify a user's identity
 @auth.route("/profile", methods=["GET"])
 @jwt_required()
 def profile():
     current_user_id = get_jwt_identity()
-    return {
-        "user_id": current_user_id,
+    user = User.query.get(current_user_id)
+
+    if user is None:
+        return {"Error": "User not found"},404
+    return {"user_id": current_user_id,
+        "username": user.username,
+        "email": user.email,
+        "role": user.role,
         "message": "You are authenticated"
-    }
+    }, 200
 
 

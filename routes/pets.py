@@ -51,17 +51,17 @@ def add_pet():
     if image_url is None or image_url.strip() == "":
         return{"Error": "An image url has to be typed in"}, 400
 
+    if shelter_id is None:
+        return {"Error": "Shelter ID is required"}, 400
+
     existing_shelter = Shelter.query.filter_by(id=shelter_id).first()
     if existing_shelter is None:
         return{"Error": "This shelter does not exist"}, 404
 
     new_pet = Pet( shelter_id = shelter_id,
-        name = name,
-        age = age,
-        gender = gender,
-        breed = breed,
-        species = species,
-        image_url = image_url)
+        name = name, age = age,
+        gender = gender, breed = breed,
+        species = species, image_url = image_url)
 
     db.session.add(new_pet)
     db.session.commit()
@@ -93,7 +93,7 @@ def get_specific_pet(id):
         "name": one_pet.name, "species": one_pet.species, "breed": one_pet.breed,
         "age": one_pet.age, "gender": one_pet.gender, "id": one_pet.id,
         "status": one_pet.status, "image_url": one_pet.image_url
-    }
+    }, 200
 
 # route that allows an admin to update a pet's details
 @pet.route("/pet/<int:id>", methods=["PATCH"])
@@ -135,7 +135,7 @@ def delete_pet(id):
     role = access_right["role"]
 
     if role != "admin":
-        return {"Error": "You do not have the admin rights to access this page"}, 403\
+        return {"Error": "You do not have the admin rights to access this page"}, 403
 
     pet_to_delete = Pet.query.filter_by(id=id).first()
     if pet_to_delete is None:
@@ -145,6 +145,4 @@ def delete_pet(id):
     return {
     "message": "Pet deleted successfully"
 }
-
-
     
