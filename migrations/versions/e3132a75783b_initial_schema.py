@@ -1,8 +1,8 @@
-"""initial tables
+"""Initial schema
 
-Revision ID: 80245494bdf2
+Revision ID: e3132a75783b
 Revises: 
-Create Date: 2026-07-27 15:13:02.279779
+Create Date: 2026-07-28 21:17:18.540188
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '80245494bdf2'
+revision = 'e3132a75783b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -34,7 +34,7 @@ def upgrade():
     sa.Column('username', sa.String(length=50), nullable=False),
     sa.Column('email', sa.String(length=80), nullable=False),
     sa.Column('role', sa.String(length=30), nullable=False),
-    sa.Column('password_hash', sa.String(length=100), nullable=False),
+    sa.Column('password_hash', sa.String(length=255), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
@@ -60,13 +60,13 @@ def upgrade():
     sa.Column('status', sa.String(), nullable=False),
     sa.Column('request_date', sa.DateTime(), nullable=False),
     sa.Column('notes', sa.Text(), nullable=True),
-    sa.ForeignKeyConstraint(['pet_id'], ['pets.id'], ),
+    sa.ForeignKeyConstraint(['pet_id'], ['pets.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('favourites',
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('pet_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('pet_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['pet_id'], ['pets.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.UniqueConstraint('user_id', 'pet_id')
