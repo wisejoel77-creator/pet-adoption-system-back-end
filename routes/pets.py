@@ -86,8 +86,44 @@ def view_pets():
 # Route to view one pet
 @pet.route("/pet/<int:id>")
 def get_specific_pet(id):
-    Pet.query.get(id=id).first()
-    
+    one_pet = Pet.query.filter_by(id=id).first()
+    if one_pet is None:
+        return {"Error": "Pet not found"}, 404
+    return{
+        "name": one_pet.name, "species": one_pet.species, "breed": one_pet.breed,
+        "age": one_pet.age, "gender": one_pet.gender, "id": one_pet.id,
+        "status": one_pet.status, "image_url": one_pet.image_url
+    }
 
+# route that allows an admin to update a pet's details
+@pet.route("/pet/<int:id>", methods=["PATCH"])
+@jwt_required()
+def update_pet(id):
+    access_right = get_jwt()
+    role = access_right["role"]
+    if role != "admin":
+        return {"Error": "You do not have the admin rights to access this page"}, 403
+
+# validation to check whether the pet to be updated exists in the records
+    pet_to_update = Pet.query.filter_by(id=id).first()
+    if pet_to_update is None:
+        return {"Error": "This pet does not exist. Please create a new pet or verify the pet id then try again"}, 404
+
+    data = request.get_json()
+    if "status" in data:
+       pet_to_update.status = data["status"]
+    if "name" in data:
+        pet_to_update.name = data["name"]
+    if "breed" in data:
+        pet_to_update.breed = data["breed"]
+    if "species" in data:
+        pet_to_update.species = data["species"]
+    db.session.commit()
+
+    return {
+    "message": "Pet updated successfully",
+    "pet_id": pet_to_update.id,
+    "status": pet_to_update.status
+}
 
     
