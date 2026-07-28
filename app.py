@@ -5,6 +5,8 @@ from config import Config
 from extensions import db, migrate, jwt, bcrypt
 from routes.auth import auth
 from routes.requests import adoptionRequests
+from routes.pets import pet
+from routes.shelters import shelter
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -17,6 +19,8 @@ bcrypt.init_app(app)
 CORS(app)
 app.register_blueprint(auth, url_prefix = "/auth")
 app.register_blueprint(adoptionRequests)
+app.register_blueprint(pet)
+app.register_blueprint(shelter)
 
 # Import models so Flask-Migrate can detect them
 import models

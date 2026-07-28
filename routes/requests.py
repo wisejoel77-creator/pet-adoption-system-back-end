@@ -7,7 +7,7 @@ from flask_jwt_extended import get_jwt
 
 adoptionRequests = Blueprint("adoptionRequests",__name__ )
 
-# adoption requests route
+# A route that allows a user to create a new adoption request
 @adoptionRequests.route("/adoption-request", methods=["POST"])
 @jwt_required()
 def create_adoption_request():
@@ -34,6 +34,7 @@ def create_adoption_request():
         "request_id": new_request.id
     },201
 
+# a route to view their adoption requests
 @adoptionRequests.route("/my-adoption-requests", methods=["GET"])
 @jwt_required()
 def get_adoption_requests():
@@ -50,7 +51,7 @@ def get_adoption_requests():
     for adoption_request in requests
     ]
 
-# Route to accept or decline an adoption request
+# Route that allows an admin to accept or decline an adoption request
 @adoptionRequests.route("/adoption-request/<int:request_id>", methods=["PATCH"])
 @jwt_required()
 def review_adoption_request(request_id):

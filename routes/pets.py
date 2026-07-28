@@ -72,6 +72,7 @@ def add_pet():
         "name" : name
     }, 201
 
+# Route to view all pets
 @pet.route("/view-all-pets", methods=["GET"])
 def view_pets():
     all_pets = Pet.query.all()
@@ -81,6 +82,11 @@ def view_pets():
         "status": pet.status,"image_url": pet.image_url
     }
         for pet in all_pets]
+
+# Route to view one pet
+@pet.route("/pet/<int:id>")
+def get_specific_pet(id):
+    Pet.query.get(id=id).first()
     
 
 
