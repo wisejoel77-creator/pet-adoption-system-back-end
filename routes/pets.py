@@ -118,6 +118,8 @@ def update_pet(id):
         pet_to_update.breed = data["breed"]
     if "species" in data:
         pet_to_update.species = data["species"]
+    if "image_url" in data:
+        pet_to_update.image_url = data["image_url"]
     db.session.commit()
 
     return {
@@ -125,5 +127,24 @@ def update_pet(id):
     "pet_id": pet_to_update.id,
     "status": pet_to_update.status
 }
+
+@pet.route("/pet/<int:id>", methods=["DELETE"])
+@jwt_required()
+def delete_pet(id):
+    access_right = get_jwt()
+    role = access_right["role"]
+
+    if role != "admin":
+        return {"Error": "You do not have the admin rights to access this page"}, 403\
+
+    pet_to_delete = Pet.query.filter_by(id=id).first()
+    if pet_to_delete is None:
+        return {"Error": "Pet not found"}, 404
+    db.session.delete(pet_to_delete)
+    db.session.commit()
+    return {
+    "message": "Pet deleted successfully"
+}
+
 
     

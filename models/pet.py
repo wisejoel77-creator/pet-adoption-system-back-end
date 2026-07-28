@@ -20,7 +20,7 @@ class Pet(db.Model):
     shelter = db.relationship("Shelter", back_populates="pets")
 
 # one pet can have many adoption requests
-    adoption_requests = db.relationship("AdoptionRequest", back_populates = "pet")
+    adoption_requests = db.relationship("AdoptionRequest", back_populates = "pet", cascade = "all, delete-orphan")
 
 # A many to many relationship with users through favourites table
     favourited_by = db.relationship("User", secondary = favourites, back_populates = "favourite_pets")

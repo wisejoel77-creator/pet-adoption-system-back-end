@@ -8,7 +8,7 @@ class AdoptionRequest(db.Model):
 
     id = db.Column(db.Integer, primary_key = True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable = False)
-    pet_id = db.Column(db.Integer, db.ForeignKey("pets.id"), nullable = False)
+    pet_id = db.Column(db.Integer, db.ForeignKey("pets.id", ondelete = "CASCADE"), nullable = False)
     status = db.Column(db.String, nullable = False, default = "Pending")
     request_date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
     notes = db.Column(db.Text, nullable = True)
