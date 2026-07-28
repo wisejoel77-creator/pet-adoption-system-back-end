@@ -64,4 +64,17 @@ def view_all_shelters():
         "city": shelter.city, "address": shelter.address
     }for shelter in all_shelters
     ], 200
+
+# A route to view one shelter
+@shelter.route("/view-shelter/<int:id>", methods=["GET"])
+def view_one_shelter(id):
+    one_shelter = Shelter.query.filter_by(id=id).first()
+    if one_shelter is None:
+        return{"Error": "Shelter not found"}, 404
+
+    return {"id": one_shelter.id, "name": one_shelter.name,
+        "address": one_shelter.address, "city": one_shelter.city,
+        "phone": one_shelter.phone, "email": one_shelter.email
+    },200
+
     
