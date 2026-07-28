@@ -72,6 +72,15 @@ def add_pet():
         "name" : name
     }, 201
 
+@pet.route("/view-all-pets", methods=["GET"])
+def view_pets():
+    all_pets = Pet.query.all()
+    return[{
+        "name": pet.name, "species": pet.species, "breed": pet.breed,
+        "age": pet.age, "gender": pet.gender, "id": pet.id,
+        "status": pet.status,"image_url": pet.image_url
+    }
+        for pet in all_pets]
     
 
 
