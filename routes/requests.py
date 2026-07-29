@@ -13,6 +13,7 @@ adoptionRequests = Blueprint("adoptionRequests",__name__ )
 
 def create_adoption_request():
     data = request.get_json()
+    print(data)
 
     claims = get_jwt()
 
@@ -66,6 +67,7 @@ def get_adoption_requests():
         "pet_id": adoption_request.pet_id,
         "status": adoption_request.status,
         "notes": adoption_request.notes,
+        "pet_name": adoption_request.pet.name,
         "request_date": adoption_request.request_date.isoformat()
     } 
     for adoption_request in requests
