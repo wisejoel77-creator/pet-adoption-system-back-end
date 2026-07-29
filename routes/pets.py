@@ -34,10 +34,16 @@ def add_pet():
     # Validate age
     if age is None:
         return {"Error": "Age field is required"}, 400
-    if not isinstance(age, int):
+    age = data.get("age")
+
+    try:
+        age = int(age)
+    except (ValueError, TypeError):
         return {"Error": "Age must be a number"}, 400
     if age < 0:
         return {"Error": "Age cannot be negative"}, 400
+    if age > 15:
+        return{"Error": "Pet is too old type in a lower number"}
 
 # Validate gender
     if gender is None or gender.strip() == "":
@@ -79,7 +85,8 @@ def view_pets():
     return[{
         "name": pet.name, "species": pet.species, "breed": pet.breed,
         "age": pet.age, "gender": pet.gender, "id": pet.id,
-        "status": pet.status,"image_url": pet.image_url
+        "status": pet.status,"image_url": pet.image_url,
+        "shelter_id": pet.shelter_id
     }
         for pet in all_pets]
 
@@ -92,11 +99,12 @@ def get_specific_pet(id):
     return{
         "name": one_pet.name, "species": one_pet.species, "breed": one_pet.breed,
         "age": one_pet.age, "gender": one_pet.gender, "id": one_pet.id,
-        "status": one_pet.status, "image_url": one_pet.image_url
+        "status": one_pet.status, "image_url": one_pet.image_url,
+        "shelter_id": one_pet.shelter_id 
     }, 200
 
 # route that allows an admin to update a pet's details
-@pet.route("/pet/<int:id>", methods=["PATCH"])
+@pet.route("/pet/<int:id>", methods=["PATCH", "PUT"])
 @jwt_required()
 def update_pet(id):
     access_right = get_jwt()
@@ -120,6 +128,12 @@ def update_pet(id):
         pet_to_update.species = data["species"]
     if "image_url" in data:
         pet_to_update.image_url = data["image_url"]
+    if "age" in data:
+        pet_to_update.age = int(data["age"])
+    if "gender" in data:
+        pet_to_update.gender = data["gender"].lower()
+    if "shelter_id" in data:
+        pet_to_update.shelter_id = data["shelter_id"]
     db.session.commit()
 
     return {
@@ -128,6 +142,7 @@ def update_pet(id):
     "status": pet_to_update.status
 }
 
+#route to delete a pet
 @pet.route("/pet/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_pet(id):
