@@ -104,3 +104,25 @@ def review_adoption_request(request_id):
     "status": adoption_request.status
 }
 
+# Admin route to view all adoption requests
+@adoptionRequests.route("/adoption-requests", methods=["GET"])
+@jwt_required()
+def get_all_adoption_requests():
+
+    claims = get_jwt()
+    if claims["role"] != "admin":
+        return {"error": "Admins only"}, 403
+    requests = AdoptionRequest.query.all()
+
+    return [
+        {
+            "id": request.id,
+            "user_id": request.user_id,
+            "pet_id": request.pet_id,
+            "status": request.status,
+            "notes": request.notes,
+            "request_date": request.request_date.isoformat()
+        }
+        for request in requests
+    ], 200
+
