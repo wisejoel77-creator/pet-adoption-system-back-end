@@ -13,4 +13,4 @@ class Shelter(db.Model):
     email = db.Column(db.String(50), nullable = False, unique = True)
 
  # Set a one to many relationship between shelter and pets
-    pets = db.relationship("Pet", back_populates = "shelter")
+    pets = db.relationship("Pet", back_populates = "shelter", cascade="all, delete-orphan")

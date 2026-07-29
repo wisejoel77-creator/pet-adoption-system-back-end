@@ -89,7 +89,7 @@ def review_adoption_request(request_id):
     data = request.get_json()
     status = data.get("status")
 
-    if status not in ["Approved", "Rejected"]:
+    if status not in ["Approved", "Rejected", "Pending"]:
         return { "error": "Status must be Approved or Rejected" }, 400
 
     adoption_request.status = status
@@ -117,8 +117,18 @@ def get_all_adoption_requests():
     return [
         {
             "id": request.id,
-            "user_id": request.user_id,
-            "pet_id": request.pet_id,
+
+            "adopter": {"id": request.user.id,
+                "username": request.user.username,
+                "email": request.user.email
+            },
+
+            "pet": {"id": request.pet.id,
+                "name": request.pet.name,
+                "breed": request.pet.breed,
+                "species": request.pet.species
+            },
+
             "status": request.status,
             "notes": request.notes,
             "request_date": request.request_date.isoformat()

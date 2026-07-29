@@ -12,7 +12,7 @@ def register():
 
     username = data.get("username")
     email = data.get("email")
-    role = data.get("role", "adopter")
+    role = data.get("adopter")
     password = data.get("password")
 
 # Validations to ensure that email, username and password fields are not empty
