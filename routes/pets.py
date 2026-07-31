@@ -99,11 +99,12 @@ def get_specific_pet(id):
         "name": one_pet.name, "species": one_pet.species, "breed": one_pet.breed,
         "age": one_pet.age, "gender": one_pet.gender, "id": one_pet.id,
         "status": one_pet.status, "image_url": one_pet.image_url,
-        "shelter_id": one_pet.shelter_id,"name": one_pet.shelter.name,
+        "shelter":{
+        "id": one_pet.shelter.id,"name": one_pet.shelter.name,
         "email": one_pet.shelter.email,
         "phone": one_pet.shelter.phone,
         "address": one_pet.shelter.address, "city": one_pet.shelter.city
-    }, 200
+    }}, 200
 
 # route that allows an admin to update a pet's details
 @pet.route("/pet/<int:id>", methods=["PATCH", "PUT"])
