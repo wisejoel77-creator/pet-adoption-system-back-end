@@ -86,7 +86,6 @@ def view_pets():
         "name": pet.name, "species": pet.species, "breed": pet.breed,
         "age": pet.age, "gender": pet.gender, "id": pet.id,
         "status": pet.status,"image_url": pet.image_url,
-        "shelter_id": pet.shelter_id
     }
         for pet in all_pets]
 
@@ -101,10 +100,9 @@ def get_specific_pet(id):
         "age": one_pet.age, "gender": one_pet.gender, "id": one_pet.id,
         "status": one_pet.status, "image_url": one_pet.image_url,
         "shelter_id": one_pet.shelter_id,"name": one_pet.shelter.name,
-            "email": one_pet.shelter.email,
-            "phone": one_pet.shelter.phone,
-            "address": one_pet.shelter.address,
-            "city": one_pet.shelter.city
+        "email": one_pet.shelter.email,
+        "phone": one_pet.shelter.phone,
+        "address": one_pet.shelter.address, "city": one_pet.shelter.city
     }, 200
 
 # route that allows an admin to update a pet's details
